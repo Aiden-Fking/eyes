@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Eyes Training API
+  version: 0.1.0
+  description: 儿童视功能训练平台 API 草案
+servers:
+  - url: https://api.eyes.local
+paths:
+  /v1/auth/login:
+    post:
+      summary: 家长登录
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone, code]
+              properties:
+                phone:
+                  type: string
+                code:
+                  type: string
+      responses:
+        '200':
+          description: OK
+  /v1/students:
+    post:
+      summary: 创建学生档案
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentCreateReq'
+      responses:
+        '201':
+          description: Created
+    get:
+      summary: 家长查询名下学生
+      responses:
+        '200':
+          description: OK
+  /v1/training/plans:
+    post:
+      summary: 创建训练计划
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanCreateReq'
+      responses:
+        '201':
+          description: Created
+  /v1/training/tasks/today:
+    get:
+      summary: 查询今日训练任务
+      responses:
+        '200':
+          description: OK
+  /v1/training/sessions:
+    post:
+      summary: 开始训练会话
+      responses:
+        '201':
+          description: Created
+  /v1/training/sessions/{sessionId}/events:
+    post:
+      summary: 上传训练过程事件（高频，建议走 Go 网关）
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventType:
+                  type: string
+                ts:
+                  type: string
+                payload:
+                  type: object
+      responses:
+        '202':
+          description: Accepted
+  /v1/reports/weekly:
+    get:
+      summary: 获取周报
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    StudentCreateReq:
+      type: object
+      required: [name, age, grade]
+      properties:
+        name:
+          type: string
+        age:
+          type: integer
+        grade:
+          type: string
+        eyeConditionTags:
+          type: array
+          items:
+            type: string
+    PlanCreateReq:
+      type: object
+      required: [studentId, goal, minutesPerDay]
+      properties:
+        studentId:
+          type: string
+        goal:
+          type: string
+          enum: [stereo, amblyopia_support, visual_habit]
+        minutesPerDay:
+          type: integer
+          minimum: 5
+          maximum: 30
