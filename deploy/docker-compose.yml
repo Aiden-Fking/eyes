@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: eyes
+      POSTGRES_PASSWORD: eyes
+      POSTGRES_DB: eyes
+    volumes:
+      - ../sql:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  core-service:
+    build:
+      context: ../backend/java-core-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/eyes
+      SPRING_DATASOURCE_USERNAME: eyes
+      SPRING_DATASOURCE_PASSWORD: eyes
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+
+  training-service:
+    build:
+      context: ../backend/go-training-service
+    environment:
+      TRAINING_DB_DSN: postgres://eyes:eyes@postgres:5432/eyes?sslmode=disable
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8081"

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eyes 视功能训练原型</title>
+  <style>
+    :root {
+      --bg1: #e6f7ff;
+      --bg2: #fff9e6;
+      --primary: #3aa0ff;
+      --accent: #ffb703;
+      --ok: #52c41a;
+      --text: #2b2b2b;
+      --card: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: min(900px, 100%);
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: 800;
+      margin: 0 0 12px;
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      font-size: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 2px dashed #d0e8ff;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 18px;
+      min-height: 64px;
+      font-size: 21px;
+      font-weight: 700;
+      padding: 12px;
+      cursor: pointer;
+      transition: transform .1s ease, filter .1s ease;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn.primary { background: var(--primary); color: #fff; }
+    .btn.accent { background: var(--accent); color: #4a3a00; }
+    .btn.ok { background: var(--ok); color: #fff; }
+
+    .progress {
+      width: 100%;
+      height: 18px;
+      background: #eff6ff;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #36cfc9, #3aa0ff);
+      transition: width .4s ease;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #fff7e6;
+      border: 1px solid #ffd591;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-right: 8px;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .small {
+      font-size: 15px;
+      opacity: .8;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1 class="title">👀 Eyes 训练营</h1>
+    <p class="subtitle">今天也来保护眼睛吧！点击大按钮开始训练。</p>
+
+    <section class="card">
+      <h2>今日任务</h2>
+      <div class="row">
+        <button class="btn primary" onclick="startTask('立体视小火箭', 35)">🚀 立体视小火箭</button>
+        <button class="btn accent" onclick="startTask('弱视追踪赛', 65)">🎯 弱视追踪赛</button>
+        <button class="btn ok" onclick="startTask('远近调节跳跳乐', 100)">🌈 远近调节跳跳乐</button>
+      </div>
+      <div class="progress"><div id="bar" class="bar"></div></div>
+      <p id="status" class="small">尚未开始，建议训练 15 分钟。</p>
+    </section>
+
+    <section class="card">
+      <h2>成长奖励</h2>
+      <span class="badge">⭐ 连续 3 天训练</span>
+      <span class="badge">🏅 专注小能手</span>
+      <span class="badge">🧠 双眼协作进步</span>
+    </section>
+
+    <section class="card">
+      <h2>家长提示</h2>
+      <p class="small">本应用用于视觉训练辅助与习惯管理，不能替代专业医生诊断；若孩子有明显视疲劳或视力变化，请及时就医。</p>
+    </section>
+  </main>
+
+  <script>
+    function startTask(name, pct) {
+      document.getElementById('bar').style.width = pct + '%';
+      const done = pct >= 100;
+      const msg = done
+        ? `已完成：${name}。太棒了，今天训练完成！`
+        : `正在训练：${name}，当前进度 ${pct}%。继续加油！`;
+      document.getElementById('status').innerText = msg;
+    }
+  </script>
+</body>
+</html>
